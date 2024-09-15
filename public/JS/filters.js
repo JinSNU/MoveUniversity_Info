@@ -225,6 +225,7 @@ additionalNotesFilter.id = 'filter-additional-notes';
 additionalNotesFilter.style.cssText = largeInputStyle;
 additionalNotesFilter.style.overflowY = 'auto'; // 스크롤 가능
 additionalNotesFilter.style.width = '95%'; // 가로 길이를 100%로 설정하여 다른 입력칸과 맞춤
+additionalNotesFilter.style.maxWidth = '98%'; // 최대 너비를 500px로 설정
 additionalNotesFilter.placeholder = '추가 메모';
 
 additionalNotesContainer.appendChild(additionalNotesFilter);
@@ -348,9 +349,45 @@ function applyFilters() {
 }
 
 
+// 범위 슬라이더 생성 함수 (양쪽 핸들을 사용하여 조절 가능)
+function createRangeSlider(id, label, min, max, step) {
+    const rangeContainer = document.createElement('div');
+    rangeContainer.style.display = 'flex';
+    rangeContainer.style.flexDirection = 'column';
+    rangeContainer.style.marginBottom = '0px';
 
+    const rangeLabel = document.createElement('label');
+    rangeLabel.textContent = `${label}: `;
+    rangeContainer.appendChild(rangeLabel);
 
-// 필터 초기화 함수
+    const slider = document.createElement('div'); // 슬라이더 요소 생성
+    slider.id = `${id}-slider`;
+    rangeContainer.appendChild(slider);
+
+    const rangeValues = document.createElement('div');
+    rangeValues.id = `${id}-values`;
+    rangeValues.textContent = `${min} - ${max}`;
+    rangeContainer.appendChild(rangeValues);
+
+    // noUiSlider 생성
+    noUiSlider.create(slider, {
+        start: [min, max],  // 초기 값
+        connect: true,  // 범위 사이에 연결선 표시
+        range: {
+            'min': min,
+            'max': max
+        },
+        step: step
+    });
+
+    // 슬라이더 값이 변경될 때 이벤트 처리
+    slider.noUiSlider.on('update', function (values) {
+        rangeValues.textContent = `${Math.round(values[0])} - ${Math.round(values[1])}`; // 값 업데이트
+    });
+
+    return rangeContainer;
+}
+
 // 필터 초기화 함수
 function resetFilters() {
     document.getElementById('filter-service-type').value = '';
@@ -385,82 +422,3 @@ function resetFilters() {
 
 // 초기 필터 UI 생성 호출
 createFilterUI();
-
-
-
-
-
-// 추가 함수에서 값 가져오기
-async function addVehicle(latitude, longitude) {
-    const name = document.getElementById('name').value;
-    const vehicleNumber = document.getElementById('vehicleNumber') ? document.getElementById('vehicleNumber').value : '';  // 차량 번호 값이 없으면 빈 문자열로 설정
-    const phoneNumber = document.getElementById('phoneNumber').value;
-    const location = document.getElementById('location').value;
-    const vehicleTonnage = parseFloat(document.getElementById('vehicleTonnage').value);
-    const vehicleType = document.getElementById('vehicleType') ? parseInt(document.getElementById('vehicleType').value) : null;  // 차량 종류 값이 없으면 null로 설정
-    const movingType = document.getElementById('movingType') ? parseInt(document.getElementById('movingType').value) : null;  // 이사 종류 값이 없으면 null로 설정
-    const serviceType = parseInt(document.getElementById('serviceType').value);  // 서비스 타입 값 가져오기
-    const loyalty = parseInt(document.getElementById('loyalty').value);
-    const friendliness = parseInt(document.getElementById('friendliness').value);
-    const dispatchCount = parseInt(document.getElementById('dispatchCount').value);
-    const additionalNotes = document.getElementById('additionalNotes').value;
-
-    // 데이터 유효성 검사
-    if (!name || !phoneNumber || !serviceType) {
-        alert('필수 필드를 올바르게 입력해주세요!');
-        return;
-    }
-
-    // 전화번호 형식 유효성 검사 (하이픈 두 개 확인)
-    if ((phoneNumber.match(/-/g) || []).length !== 2) {
-        alert('전화번호는 하이픈(-) 두 개가 포함된 형식이어야 합니다.');
-        return;
-    }
-
-    // 충성도와 친절도가 0에서 10 사이인지 확인
-    if (loyalty < 0 || loyalty > 10) {
-        alert('충성도는 0에서 10 사이의 값을 입력해야 합니다.');
-        return;
-    }
-
-    if (friendliness < 0 || friendliness > 10) {
-        alert('친절도는 0에서 10 사이의 값을 입력해야 합니다.');
-        return;
-    }
-
-    const newVehicle = {
-        name,
-        vehicleNumber,
-        phoneNumber,
-        location,
-        vehicleTonnage,
-        vehicleType,
-        movingType,
-        serviceType, // 추가된 서비스 타입
-        loyalty,
-        friendliness,
-        dispatchCount,
-        additionalNotes,
-        latitude,
-        longitude
-    };
-
-    const response = await fetch('/api/vehicles', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newVehicle)
-    });
-
-    const result = await response.json();
-    if (response.ok) {
-        alert('기사 추가 완료!');
-        loadVehicleData();  // 새로운 데이터를 불러와서 지도에 표시
-        document.body.removeChild(currentPopup);  // 입력 창 닫기
-        currentPopup = null;
-    } else {
-        console.error('추가 실패:', result.error);
-        alert(`기사 추가 실패: ${result.error}`);
-    }
-}

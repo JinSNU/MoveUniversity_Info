@@ -289,13 +289,7 @@ async function saveVehicle(id) {
 
     // 데이터 유효성 검사
     if (!name || !phoneNumber || !serviceType) {
-        alert('필수 필드를 올바르게 입력해주세요!');
-        return;
-    }
-
-    // 전화번호 형식 유효성 검사 (하이픈 두 개 확인)
-    if ((phoneNumber.match(/-/g) || []).length !== 2) {
-        alert('전화번호는 하이픈(-) 두 개가 포함된 형식이어야 합니다.');
+        alert('데이터를 모두 입력해주세요!');
         return;
     }
 
