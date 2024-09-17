@@ -186,24 +186,27 @@ function initializeMap() {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // 축척 컨트롤 추가
-    L.control.scale({
-        imperial: false,  // 미터법만 사용
-        position: 'bottomleft'
-    }).addTo(map);
-
     // 줌 레벨 표시 컨트롤 생성
-    const zoomControl = L.control({position: 'bottomleft'});
+    const zoomControl = L.control({ position: 'bottomleft' });
     zoomControl.onAdd = function (map) {
         this._div = L.DomUtil.create('div', 'zoom-control');
+        this._div.style.marginBottom = '5px'; // 하단 여백 추가
+        this._div.style.marginLeft = '5px'; // 좌측 여백 추가
         this.update();
         return this._div;
     };
     zoomControl.update = function () {
         const zoom = map.getZoom();
-        this._div.innerHTML = `Zoom: ${zoom}`;
+        this._div.innerHTML = `Zoom Level: ${zoom}`;
     };
     zoomControl.addTo(map);
+
+    // 축척 컨트롤 추가
+    L.control.scale({
+        imperial: false,  // 미터법만 사용
+        position: 'bottomleft',  // 왼쪽 하단으로 설정
+        maxWidth: 100,  // 최대 너비 설정
+    }).addTo(map);
 
     // 줌 변경 이벤트에 대한 리스너 추가
     map.on('zoomend', function() {

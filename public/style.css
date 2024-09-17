@@ -255,7 +255,7 @@ body {
 
 .zoom-control {
     background: white;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.5);
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
     border-radius: 5px;
     padding: 5px 10px;
@@ -263,7 +263,6 @@ body {
     line-height: 1.5;
     color: #333;
     font-family: Arial, sans-serif;
-    margin-bottom: 5px;  /* Leaflet 축척 컨트롤과의 간격 */
 }
 
 /* 기존의 zoom-control 스타일은 그대로 유지합니다 */
