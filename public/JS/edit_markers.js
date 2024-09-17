@@ -274,6 +274,13 @@ phoneNumberInput.addEventListener('input', function (e) {
 
 // 차량 수정 후 저장 함수
 async function saveVehicle(id) {
+    // 비밀번호 입력 프롬프트
+    const password = prompt("비밀번호를 입력하세요:");
+    if (password !== "24대학%") {
+        alert("비밀번호가 올바르지 않습니다.");
+        return;
+    }
+
     const name = document.getElementById('edit-name').value;
     const vehicleNumber = document.getElementById('edit-vehicle-number').value;
     const phoneNumber = document.getElementById('edit-phone-number').value;

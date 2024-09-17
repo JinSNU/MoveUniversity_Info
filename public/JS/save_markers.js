@@ -295,6 +295,13 @@ function initSaveMarkers(map) {
 
     // addVehicle 함수도 이 스코프 내에 위치시킵니다.
     async function addVehicle(latitude, longitude) {
+        // 비밀번호 입력 프롬프트
+        const password = prompt("비밀번호를 입력하세요:");
+        if (password !== "24대학%") {
+            alert("비밀번호가 올바르지 않습니다.");
+            return;
+        }
+
         const name = document.getElementById('name').value;
         const vehicleNumber = document.getElementById('vehicleNumber') ? document.getElementById('vehicleNumber').value : '';  // 차량 번호 값이 없으면 빈 문자열로 설정
         const phoneNumber = document.getElementById('phoneNumber').value;
