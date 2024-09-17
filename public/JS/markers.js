@@ -1,14 +1,3 @@
-// 마커 클러스터 그룹 생성
-const markers = L.markerClusterGroup({
-    maxClusterRadius: 30,  // 클러스터로 합쳐지는 최대 픽셀 거리 설정 (기본값은 80)
-    // 기타 옵션 설정 가능
-});
-
-// OSM 타일 추가
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-}).addTo(map);
-
 const createCustomIcon = (colorClass) => {
     const iconSize = 25;  // 아이콘 본체의 크기
     const tailWidth = 10;  // 꼬리의 너비
