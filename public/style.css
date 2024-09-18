@@ -37,7 +37,65 @@ body {
     color: black;
     cursor: pointer;
 }
-
+/* 로그인 창을 화면 중앙에 배치 */
+#login-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
+}
+#login-container input {
+    margin-bottom: 10px;
+    padding: 10px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+#login-container .button-container {
+    display: flex;
+    gap: 10px; /* 버튼 간격 */
+}
+#login-container button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+#login-container button:hover {
+    background-color: #0056b3;
+}
+#login-container .message {
+    color: red;
+    margin-top: 10px;
+}
+/* 로그아웃 버튼 스타일 */
+#logout-button {
+    padding: 3px 8px;
+    border: none;
+    border-radius: 8px;
+    background-color: #cfcfcf;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    position: absolute;
+    bottom: 16px;
+    right: 2px;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+#logout-button:hover {
+    background-color: #bfbfbf;
+}
 /* 입력 그룹 스타일 */
 .input-group {
     display: flex;  /* 수평 정렬을 위해 flexbox 사용 */

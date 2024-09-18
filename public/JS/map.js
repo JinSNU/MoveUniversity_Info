@@ -172,6 +172,11 @@ function formatDistance(distance) {
 }
 
 function initializeMap() {
+    if (map) {
+        map.invalidateSize(); // 이미 초기화된 경우 크기만 다시 계산
+        return;
+    }
+
     if (typeof L === 'undefined') {
         console.error('Leaflet is not loaded');
         return;

@@ -1,0 +1,5 @@
+const SUPABASE_URL = 'https://mqhmfbkfvjzwonrpatfp.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xaG1mYmtmdmp6d29ucnBhdGZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjYxMDg2MDQsImV4cCI6MjA0MTY4NDYwNH0.xwVVAlljiZ9J6rf_2mP_C-73ygYOYbEeBN1VzUYYRik';
+
+window.SUPABASE_URL = SUPABASE_URL;
+window.SUPABASE_KEY = SUPABASE_KEY;

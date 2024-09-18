@@ -26,37 +26,47 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
 </head>
 <body>
-    <div id="map"></div>
-    <div id="route-result" class="route-result"></div>
-    <div id="search-container">
-        <div>
-            <input type="text" id="start-address-input" placeholder="출발지 주소 입력">
-            <button id="start-search-button">출발지 검색</button>
+    <!-- 로그인 UI 추가 -->
+    <div id="login-container">
+        <input type="email" id="email" placeholder="이메일">
+        <input type="password" id="password" placeholder="비밀번호">
+        <div class="button-container">
+            <button id="login-button">로그인</button>
+            <button id="signup-button">회원가입</button>
         </div>
-        <div>
-            <input type="text" id="end-address-input" placeholder="도착지 주소 입력">
-            <button id="end-search-button">도착지 검색</button>
-        </div>
+        <div class="message" id="message"></div>
     </div>
-    <a href="https://moveuniversity.kr/" target="_blank" class="logo-link">
-        <img src="./img/Logo.png" alt="이사대학 로고" class="top-right-image">
-    </a>
-    
-    <!-- 기타 HTML 요소들 -->
 
-    <div id="notification" class="notification"></div>
+    <!-- 지도 및 기타 기능 -->
+    <div id="map-container" style="display: none;">
+        <div id="map" style="width: 100%; height: 100vh;"></div>
+        <div id="route-result" class="route-result"></div>
+        <div id="search-container">
+            <div>
+                <input type="text" id="start-address-input" placeholder="출발지 주소 입력">
+                <button id="start-search-button">출발지 검색</button>
+            </div>
+            <div>
+                <input type="text" id="end-address-input" placeholder="도착지 주소 입력">
+                <button id="end-search-button">도착지 검색</button>
+            </div>
+        </div>
+        <a href="https://moveuniversity.kr/" target="_blank" class="logo-link">
+            <img src="./img/Logo.png" alt="이사대학 로고" class="top-right-image">
+        </a>
+        <div id="notification" class="notification"></div>
+        <button id="logout-button">로그아웃</button> <!-- 로그아웃 버튼 추가 및 위치 조정 -->
+    </div>
+
+    <!-- Supabase JS 라이브러리 추가 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="./JS/config.js"></script>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
-    
-    <!-- Leaflet.Draw JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
-    
-    <!-- Leaflet.MarkerCluster JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
-
-    <!-- noUiSlider JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.js"></script>
 
     <!-- Custom JS 파일들 -->
@@ -68,5 +78,79 @@
     <script src="./JS/edit_markers.js"></script>
     <script src="./JS/filters.js"></script>
     <script src="./JS/end.js"></script>
+
+    <!-- 로그인 스크립트 -->
+    <script type="module">
+        window.addEventListener('load', () => {
+            const { SUPABASE_URL, SUPABASE_KEY } = window;
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+            const showMap = () => {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('map-container').style.display = 'block';
+                // 지도 초기화 코드 추가
+                if (typeof initializeMap === 'function') {
+                    initializeMap();
+                }
+                // 지도의 크기를 다시 계산하여 올바르게 표시되도록 함
+                setTimeout(() => {
+                    if (map) {
+                        map.invalidateSize();
+                    }
+                }, 100);
+                // 필터 UI 생성
+                createFilterUI();
+            };
+
+            const showLogin = () => {
+                document.getElementById('login-container').style.display = 'flex'; // 'block' 대신 'flex' 사용
+                document.getElementById('map-container').style.display = 'none';
+            };
+
+            document.getElementById('login-button').addEventListener('click', async () => {
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const { data: { user }, error } = await supabase.auth.signInWithPassword({ email, password });
+
+                const messageElement = document.getElementById('message');
+                if (user) {
+                    showMap();
+                    messageElement.textContent = '';
+                } else {
+                    messageElement.textContent = '로그인 실패: ' + error.message;
+                }
+            });
+
+            document.getElementById('signup-button').addEventListener('click', async () => {
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const { data: { user }, error } = await supabase.auth.signUp({ email, password });
+
+                const messageElement = document.getElementById('message');
+                if (user) {
+                    messageElement.textContent = '회원가입 성공! 메일을 확인해주세요.';
+                } else {
+                    messageElement.textContent = '회원가입 실패: ' + error.message;
+                }
+            });
+
+            document.getElementById('logout-button').addEventListener('click', async () => {
+                const { error } = await supabase.auth.signOut();
+                if (!error) {
+                    showLogin();
+                } else {
+                    alert('로그아웃 실패: ' + error.message);
+                }
+            });
+
+            // 페이지 로드 시 로그인 상태 확인
+            (async () => {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) {
+                    showMap();
+                }
+            })();
+        });
+    </script>
 </body>
 </html>

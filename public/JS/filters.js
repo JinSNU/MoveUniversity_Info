@@ -1,8 +1,9 @@
 // 필터 UI 추가
 function createFilterUI() {
     const inputStyle = 'height: 21px; padding: 2px 5px; border: 1px solid #a3a3a3; border-radius: 4px;';
-    const selectStyle = 'height: 28px; padding: 2px 5px; border: 1px solid #a3a3a3; border-radius: 4px;'; 
-    const largeInputStyle = 'height: 50px; padding: 2px 5px; border: 1px solid #a3a3a3; border-radius: 4px;'; // 큰 입력칸 스타일// select 요소를 위한 스타일
+    const selectStyle = 'height: 28px; padding: 2px 5px; border: 1px solid #a3a3a3; border-radius: 4px;';
+    const largeInputStyle = 'height: 50px; padding: 2px 5px; border: 1px solid #a3a3a3; border-radius: 4px;';
+
     // 필터 전체를 감싸는 컨테이너
     const filterWrapper = document.createElement('div');
     filterWrapper.style.position = 'absolute';
@@ -61,291 +62,219 @@ function createFilterUI() {
     filterContainer.style.gap = '12px';  // 필터 간 간격 늘림
     filterContainer.style.marginTop = '5px';  // 버튼과의 간격 설정
     filterContainer.style.overflow = 'visible'; // 오버플로우를 보이도록 설정
-        // ** 가로 길이를 고정하는 부분 **
-        filterContainer.style.width = '200px'; // 고정된 가로 길이 설정
-     // 필터 제목
-     const filterTitle = document.createElement('h3');
-     filterTitle.textContent = '필터';
-     filterTitle.style.marginBottom = '10px';
-     filterContainer.appendChild(filterTitle);
- 
-     // 1. 서비스 타입 필터
-     const serviceTypeFilter = document.createElement('select');
-     serviceTypeFilter.id = 'filter-service-type';
-     serviceTypeFilter.innerHTML = `
-         <option value="">서비스 타입</option>
-         <option value="1">1톤팀</option>
-         <option value="2">익스프레스</option>
-         <option value="3">당근</option>
-         <option value="4">청소</option>
-         <option value="5">에어컨</option>
-         <option value="6">창고</option>
-         <option value="7">파출부</option>
-         <option value="8">인테리어</option>
-         <option value="9">기타</option>
-     `;
-     serviceTypeFilter.style.cssText = selectStyle;
-     filterContainer.appendChild(serviceTypeFilter);
- 
-     // 2. 이름 필터
-     const nameFilter = document.createElement('input');
-     nameFilter.id = 'filter-name';
-     nameFilter.type = 'text';
-     nameFilter.placeholder = '이름';
-     nameFilter.style.cssText = inputStyle;
-     filterContainer.appendChild(nameFilter);
- 
-// 3. 차량 번호 필터 (기본적으로 숨김)
-const vehicleNumberFilter = document.createElement('input');
-vehicleNumberFilter.id = 'filter-vehicle-number';
-vehicleNumberFilter.type = 'text';
-vehicleNumberFilter.placeholder = '차량 번호';
-vehicleNumberFilter.style.cssText = inputStyle;
-vehicleNumberFilter.style.display = 'none';  // 초기에는 숨김
-filterContainer.appendChild(vehicleNumberFilter);
+    filterContainer.style.width = '200px'; // 고정된 가로 길이 설정
 
-// 4. 전화 번호 필터
-const phoneNumberFilter = document.createElement('input');
-phoneNumberFilter.id = 'filter-phone-number';
-phoneNumberFilter.type = 'text';
-phoneNumberFilter.placeholder = '전화 번호';
-phoneNumberFilter.style.cssText = inputStyle;
-filterContainer.appendChild(phoneNumberFilter);
+    // 필터 제목
+    const filterTitle = document.createElement('h3');
+    filterTitle.textContent = '필터';
+    filterTitle.style.marginBottom = '10px';
+    filterContainer.appendChild(filterTitle);
 
-// 전화 번호 입력 필드에 이벤트 리스너 추가
-phoneNumberFilter.addEventListener('input', function (e) {
-    let value = e.target.value.replace(/\D/g, ''); // 숫자 이외의 문자 제거
+    // 1. 서비스 타입 필터
+    const serviceTypeFilter = document.createElement('select');
+    serviceTypeFilter.id = 'filter-service-type';
+    serviceTypeFilter.innerHTML = `
+        <option value="">서비스 타입</option>
+        <option value="1">1톤팀</option>
+        <option value="2">익스프레스</option>
+        <option value="3">당근</option>
+        <option value="4">청소</option>
+        <option value="5">에어컨</option>
+        <option value="6">창고</option>
+        <option value="7">파출부</option>
+        <option value="8">인테리어</option>
+        <option value="9">기타</option>
+    `;
+    serviceTypeFilter.style.cssText = selectStyle;
+    filterContainer.appendChild(serviceTypeFilter);
 
-    if (value.length > 11) {
-        value = value.slice(0, 11); // 최대 11자리까지만 허용
-    }
+    // 2. 이름 필터
+    const nameFilter = document.createElement('input');
+    nameFilter.id = 'filter-name';
+    nameFilter.type = 'text';
+    nameFilter.placeholder = '이름';
+    nameFilter.style.cssText = inputStyle;
+    filterContainer.appendChild(nameFilter);
 
-    if (value.length > 10) {
-        value = value.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-    } else if (value.length > 9) {
-        value = value.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
-    } else if (value.length > 8) {
-        value = value.replace(/(\d{3})(\d{3})(\d{3})/, '$1-$2-$3');
-    } else if (value.length > 4) {
-        value = value.replace(/(\d{4})(\d{1,4})/, '$1-$2');
-    }
+    // 3. 차량 번호 필터 (기본적으로 숨김)
+    const vehicleNumberFilter = document.createElement('input');
+    vehicleNumberFilter.id = 'filter-vehicle-number';
+    vehicleNumberFilter.type = 'text';
+    vehicleNumberFilter.placeholder = '차량 번호';
+    vehicleNumberFilter.style.cssText = inputStyle;
+    vehicleNumberFilter.style.display = 'none';  // 초기에는 숨김
+    filterContainer.appendChild(vehicleNumberFilter);
 
-    e.target.value = value;
-});
+    // 4. 전화 번호 필터
+    const phoneNumberFilter = document.createElement('input');
+    phoneNumberFilter.id = 'filter-phone-number';
+    phoneNumberFilter.type = 'text';
+    phoneNumberFilter.placeholder = '전화 번호';
+    phoneNumberFilter.style.cssText = inputStyle;
+    filterContainer.appendChild(phoneNumberFilter);
 
-// 5. 지역 이름 필터
-const locationFilter = document.createElement('input');
-locationFilter.id = 'filter-location';
-locationFilter.type = 'text';
-locationFilter.placeholder = '지역 이름';
-locationFilter.style.cssText = inputStyle;
-filterContainer.appendChild(locationFilter);
- 
- // 6. 차량 톤수 및 차량 종류 필터를 위한 컨테이너 생성 (기본적으로 숨김)
-const vehicleTonnageTypeFilterContainer = document.createElement('div');
-vehicleTonnageTypeFilterContainer.style.display = 'none'; // 초기에는 숨김
-vehicleTonnageTypeFilterContainer.style.flexDirection = 'row';
-vehicleTonnageTypeFilterContainer.style.alignItems = 'center';
-vehicleTonnageTypeFilterContainer.style.gap = '5px';
+    // 전화 번호 입력 필드에 이벤트 리스너 추가
+    phoneNumberFilter.addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, ''); // 숫자 이외의 문자 제거
 
-// 차량 톤수 필터
-const vehicleTonnageFilter = document.createElement('input');
-vehicleTonnageFilter.id = 'filter-vehicle-tonnage';
-vehicleTonnageFilter.type = 'number';
-vehicleTonnageFilter.placeholder = '톤수';
-vehicleTonnageFilter.style.width = '50px';
-vehicleTonnageFilter.style.height = '18px';
-vehicleTonnageFilter.style.padding = '2px 5px';
-vehicleTonnageTypeFilterContainer.appendChild(vehicleTonnageFilter);
-
-const tonLabel = document.createElement('span');
-tonLabel.textContent = '톤';
-tonLabel.style.marginRight = '10px';
-vehicleTonnageTypeFilterContainer.appendChild(tonLabel);
-
-// 차량 종류 필터
-const vehicleTypeFilter = document.createElement('select');
-vehicleTypeFilter.id = 'filter-vehicle-type';
-vehicleTypeFilter.innerHTML = `
-    <option value="">차량 종류</option>
-    <option value="1">카고</option>
-    <option value="2">호루</option>
-    <option value="3">탑차</option>
-    <option value="4">윙바디</option>
-    <option value="5">리프트카</option>
-    <option value="6">냉동탑</option>
-    <option value="7">냉동윙</option>
-    <option value="8">전기차</option>
-    <option value="9">전기리프트</option>
-    <option value="10">다마스</option>
-    <option value="11">라보</option>
-`;
-vehicleTypeFilter.style.height = '28px';
-vehicleTypeFilter.style.padding = '2px 5px';
-vehicleTypeFilter.style.width = '100px';
-vehicleTonnageTypeFilterContainer.appendChild(vehicleTypeFilter);
-
-// 컨테이너를 필터 컨테이너에 추가
-filterContainer.appendChild(vehicleTonnageTypeFilterContainer);
- 
-     // 7. 이사 종류 필터 (기본적으로 숨김)
-     const movingTypeFilter = document.createElement('select');
-     movingTypeFilter.id = 'filter-moving-type';
-     movingTypeFilter.innerHTML = `
-         <option value="">이사 종류</option>
-         <option value="1">포장이사</option>
-         <option value="2">반포장이사</option>
-         <option value="3">일반이사</option>
-         <option value="4">익스프레스</option>
-         <option value="5">단순용달</option>
-     `;
-     movingTypeFilter.style.height = '28px';
-     movingTypeFilter.style.padding = '2px 5px';
-     movingTypeFilter.style.display = 'none';  // 초기에는 숨김
-     filterContainer.appendChild(movingTypeFilter);
- 
-     // 8. 충성도 필터 (범위 슬라이더)
-     const loyaltyFilter = createRangeSlider('loyalty', '충성도', 0, 10, 1);
-     filterContainer.appendChild(loyaltyFilter);
- 
-     // 9. 친절도 필터 (범위 슬라이더)
-     const friendlinessFilter = createRangeSlider('friendliness', '친절도', 0, 10, 1);
-     filterContainer.appendChild(friendlinessFilter);
- 
-     // 10. 배차 횟수 필터 (범위 슬라이더)
-     const dispatchCountFilter = createRangeSlider('dispatch-count', '배차 횟수', 0, 1000, 1);
-     filterContainer.appendChild(dispatchCountFilter);
-
-// 11. 추가 메모 필터
-const additionalNotesContainer = document.createElement('div');
-additionalNotesContainer.style.position = 'relative';
-
-const additionalNotesFilter = document.createElement('textarea');
-additionalNotesFilter.id = 'filter-additional-notes';
-additionalNotesFilter.style.cssText = largeInputStyle;
-additionalNotesFilter.style.overflowY = 'auto'; // 스크롤 가능
-additionalNotesFilter.style.width = '95%'; // 가로 길이를 100%로 설정하여 다른 입력칸과 맞춤
-additionalNotesFilter.style.maxWidth = '98%'; // 최대 너비를 500px로 설정
-additionalNotesFilter.placeholder = '추가 메모';
-
-additionalNotesContainer.appendChild(additionalNotesFilter);
-filterContainer.appendChild(additionalNotesContainer);
-     // 필터 적용 버튼
-     const filterButton = document.createElement('button');
-     filterButton.textContent = '필터 적용';
-     filterButton.style.width = '100%';
-     filterButton.onclick = applyFilters;
-     filterContainer.appendChild(filterButton);
- 
-     // 필터 초기화 버튼
-     const resetButton = document.createElement('button');
-     resetButton.textContent = '필터 초기화';
-     resetButton.style.width = '100%';
-     resetButton.onclick = resetFilters;
-     filterContainer.appendChild(resetButton);
- 
-// 서비스 타입 필터 변경에 따른 필터 표시/숨기기 로직 추가
-serviceTypeFilter.addEventListener('change', function () {
-    const serviceType = serviceTypeFilter.value;
-    const isOneTonTeam = serviceType === "1";
-
-    // 1톤팀일 때만 추가 필터 표시
-    vehicleNumberFilter.style.display = isOneTonTeam ? 'block' : 'none';
-    vehicleTonnageTypeFilterContainer.style.display = isOneTonTeam ? 'flex' : 'none';
-    movingTypeFilter.style.display = isOneTonTeam ? 'block' : 'none';
-});
-serviceTypeFilter.dispatchEvent(new Event('change'));
- 
-     // 필터 전체를 감싸는 요소에 추가
-     filterWrapper.appendChild(filterContainer);
-     document.body.appendChild(filterWrapper);
- }
-
-
-
-
-
-function applyFilters() {
-    const serviceTypeValue = document.getElementById('filter-service-type').value;
-    const nameValue = document.getElementById('filter-name').value.trim();
-    const vehicleNumberValue = document.getElementById('filter-vehicle-number').value.trim();
-    const phoneNumberValue = document.getElementById('filter-phone-number').value.trim();
-    const locationValue = document.getElementById('filter-location').value.trim();
-    const vehicleTonnageValue = document.getElementById('filter-vehicle-tonnage').value.trim();
-    const vehicleTypeValue = document.getElementById('filter-vehicle-type').value;
-    const movingTypeValue = document.getElementById('filter-moving-type').value;
-    const additionalNotesValue = document.getElementById('filter-additional-notes').value.trim();
-
-    // 슬라이더 값 가져오기
-    const loyaltySlider = document.getElementById('loyalty-slider').noUiSlider.get();
-    const friendlinessSlider = document.getElementById('friendliness-slider').noUiSlider.get();
-    const dispatchCountSlider = document.getElementById('dispatch-count-slider').noUiSlider.get();
-
-    markers.clearLayers(); // 기존 마커 제거
-
-    // 필터링된 마커 추가
-    Object.values(vehicleMarkers).forEach(marker => {
-        const vehicleData = marker.options.vehicleData;
-        let matchesFilter = true;
-
-        if (serviceTypeValue && vehicleData.serviceType !== parseInt(serviceTypeValue)) {
-            matchesFilter = false;
+        if (value.length > 11) {
+            value = value.slice(0, 11); // 최대 11자리까지만 허용
         }
 
-        if (nameValue && !vehicleData.name.includes(nameValue)) {
-            matchesFilter = false;
+        if (value.length > 10) {
+            value = value.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+        } else if (value.length > 9) {
+            value = value.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+        } else if (value.length > 8) {
+            value = value.replace(/(\d{3})(\d{3})(\d{3})/, '$1-$2-$3');
+        } else if (value.length > 4) {
+            value = value.replace(/(\d{4})(\d{1,4})/, '$1-$2');
         }
 
-        if (vehicleNumberValue && !vehicleData.vehicleNumber.includes(vehicleNumberValue)) {
-            matchesFilter = false;
-        }
-
-        if (phoneNumberValue && !vehicleData.phoneNumber.includes(phoneNumberValue)) {
-            matchesFilter = false;
-        }
-
-        if (locationValue && !vehicleData.location.includes(locationValue)) {
-            matchesFilter = false;
-        }
-
-        // 차량 톤수 필터 적용
-        if (vehicleTonnageValue && vehicleData.vehicleTonnage !== parseFloat(vehicleTonnageValue)) {
-            matchesFilter = false;
-        }
-
-        // 차량 종류 필터 적용
-        if (vehicleTypeValue && vehicleData.vehicleType !== parseInt(vehicleTypeValue)) {
-            matchesFilter = false;
-        }
-
-        // 이사 종류 필터 적용
-        if (movingTypeValue && vehicleData.movingType !== parseInt(movingTypeValue)) {
-            matchesFilter = false;
-        }
-
-        // 범위 슬라이더 값으로 필터링
-        if ((vehicleData.loyalty < loyaltySlider[0]) || (vehicleData.loyalty > loyaltySlider[1])) {
-            matchesFilter = false;
-        }
-
-        if ((vehicleData.friendliness < friendlinessSlider[0]) || (vehicleData.friendliness > friendlinessSlider[1])) {
-            matchesFilter = false;
-        }
-
-        if ((vehicleData.dispatchCount < dispatchCountSlider[0]) || (vehicleData.dispatchCount > dispatchCountSlider[1])) {
-            matchesFilter = false;
-        }
-
-        if (additionalNotesValue && !vehicleData.additionalNotes.includes(additionalNotesValue)) {
-            matchesFilter = false;
-        }
-
-        if (matchesFilter) {
-            markers.addLayer(marker); // 필터 조건에 맞는 마커만 추가
-        }
+        e.target.value = value;
     });
 
-    map.addLayer(markers); // 필터링된 마커를 지도에 추가
+    // 5. 지역 이름 필터
+    const locationFilter = document.createElement('input');
+    locationFilter.id = 'filter-location';
+    locationFilter.type = 'text';
+    locationFilter.placeholder = '지역 이름';
+    locationFilter.style.cssText = inputStyle;
+    filterContainer.appendChild(locationFilter);
+
+    // 6. 차량 톤수 및 차량 종류 필터를 위한 컨테이너 생성 (기본적으로 숨김)
+    const vehicleTonnageTypeFilterContainer = document.createElement('div');
+    vehicleTonnageTypeFilterContainer.style.display = 'none'; // 초기에는 숨김
+    vehicleTonnageTypeFilterContainer.style.flexDirection = 'row';
+    vehicleTonnageTypeFilterContainer.style.alignItems = 'center';
+    vehicleTonnageTypeFilterContainer.style.gap = '5px';
+
+    // 차량 톤수 필터
+    const vehicleTonnageFilter = document.createElement('input');
+    vehicleTonnageFilter.id = 'filter-vehicle-tonnage';
+    vehicleTonnageFilter.type = 'number';
+    vehicleTonnageFilter.placeholder = '톤수';
+    vehicleTonnageFilter.style.width = '50px';
+    vehicleTonnageFilter.style.height = '18px';
+    vehicleTonnageFilter.style.padding = '2px 5px';
+    vehicleTonnageTypeFilterContainer.appendChild(vehicleTonnageFilter);
+
+    const tonLabel = document.createElement('span');
+    tonLabel.textContent = '톤';
+    tonLabel.style.marginRight = '10px';
+    vehicleTonnageTypeFilterContainer.appendChild(tonLabel);
+
+    // 차량 종류 필터
+    const vehicleTypeFilter = document.createElement('select');
+    vehicleTypeFilter.id = 'filter-vehicle-type';
+    vehicleTypeFilter.innerHTML = `
+        <option value="">차량 종류</option>
+        <option value="1">카고</option>
+        <option value="2">호루</option>
+        <option value="3">탑차</option>
+        <option value="4">윙바디</option>
+        <option value="5">리프트카</option>
+        <option value="6">냉동탑</option>
+        <option value="7">냉동윙</option>
+        <option value="8">전기차</option>
+        <option value="9">전기리프트</option>
+        <option value="10">다마스</option>
+        <option value="11">라보</option>
+    `;
+    vehicleTypeFilter.style.height = '28px';
+    vehicleTypeFilter.style.padding = '2px 5px';
+    vehicleTypeFilter.style.width = '100px';
+    vehicleTonnageTypeFilterContainer.appendChild(vehicleTypeFilter);
+
+    // 컨테이너를 필터 컨테이너에 추가
+    filterContainer.appendChild(vehicleTonnageTypeFilterContainer);
+
+    // 7. 이사 종류 필터 (기본적으로 숨김)
+    const movingTypeFilter = document.createElement('select');
+    movingTypeFilter.id = 'filter-moving-type';
+    movingTypeFilter.innerHTML = `
+        <option value="">이사 종류</option>
+        <option value="1">포장이사</option>
+        <option value="2">반포장이사</option>
+        <option value="3">일반이사</option>
+        <option value="4">익스프레스</option>
+        <option value="5">단순용달</option>
+    `;
+    movingTypeFilter.style.height = '28px';
+    movingTypeFilter.style.padding = '2px 5px';
+    movingTypeFilter.style.display = 'none';  // 초기에는 숨김
+    filterContainer.appendChild(movingTypeFilter);
+
+    // 8. 충성도 필터 (범위 슬라이더)
+    const loyaltyFilter = createRangeSlider('loyalty', '충성도', 0, 10, 1);
+    filterContainer.appendChild(loyaltyFilter);
+
+    // 9. 친절도 필터 (범위 슬라이더)
+    const friendlinessFilter = createRangeSlider('friendliness', '친절도', 0, 10, 1);
+    filterContainer.appendChild(friendlinessFilter);
+
+    // 10. 배차 횟수 필터 (범위 슬라이더)
+    const dispatchCountFilter = createRangeSlider('dispatch-count', '배차 횟수', 0, 1000, 1);
+    filterContainer.appendChild(dispatchCountFilter);
+
+    // 11. 추가 메모 필터
+    const additionalNotesContainer = document.createElement('div');
+    additionalNotesContainer.style.position = 'relative';
+
+    const additionalNotesFilter = document.createElement('textarea');
+    additionalNotesFilter.id = 'filter-additional-notes';
+    additionalNotesFilter.style.cssText = largeInputStyle;
+    additionalNotesFilter.style.overflowY = 'auto'; // 스크롤 가능
+    additionalNotesFilter.style.width = '95%'; // 가로 길이를 100%로 설정하여 다른 입력칸과 맞춤
+    additionalNotesFilter.style.maxWidth = '98%'; // 최대 너비를 500px로 설정
+    additionalNotesFilter.placeholder = '추가 메모';
+
+    additionalNotesContainer.appendChild(additionalNotesFilter);
+    filterContainer.appendChild(additionalNotesContainer);
+    function applyFilters() {
+        // 필터 조건에 맞는 마커만 표시하는 로직 추가
+        // 예시: 이름 필터 적용
+        const nameFilterValue = document.getElementById('filter-name').value.toLowerCase();
+        markers.clearLayers();
+    
+        Object.values(vehicleMarkers).forEach(marker => {
+            const markerName = marker.options.title.toLowerCase();
+            if (markerName.includes(nameFilterValue)) {
+                markers.addLayer(marker);
+            }
+        });
+    
+        map.addLayer(markers);
+    }
+    // 필터 적용 버튼
+    const filterButton = document.createElement('button');
+    filterButton.textContent = '필터 적용';
+    filterButton.style.width = '100%';
+    filterButton.onclick = applyFilters;
+    filterContainer.appendChild(filterButton);
+
+    // 필터 초기화 버튼
+    const resetButton = document.createElement('button');
+    resetButton.textContent = '필터 초기화';
+    resetButton.style.width = '100%';
+    resetButton.onclick = resetFilters;
+    filterContainer.appendChild(resetButton);
+
+    // 서비스 타입 필터 변경에 따른 필터 표시/숨기기 로직 추가
+    serviceTypeFilter.addEventListener('change', function () {
+        const serviceType = serviceTypeFilter.value;
+        const isOneTonTeam = serviceType === "1";
+
+        // 1톤팀일 때만 추가 필터 표시
+        vehicleNumberFilter.style.display = isOneTonTeam ? 'block' : 'none';
+        vehicleTonnageTypeFilterContainer.style.display = isOneTonTeam ? 'flex' : 'none';
+        movingTypeFilter.style.display = isOneTonTeam ? 'block' : 'none';
+    });
+    serviceTypeFilter.dispatchEvent(new Event('change'));
+
+    // 필터 전체를 감싸는 요소에 추가
+    filterWrapper.appendChild(filterContainer);
+    document.getElementById('map-container').appendChild(filterWrapper); // map-container에 추가
 }
 
 
