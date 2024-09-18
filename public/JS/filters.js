@@ -24,7 +24,7 @@ function createFilterUI() {
     filterToggleButton.style.color = 'black';  // 텍스트 색상
     filterToggleButton.style.fontWeight = 'bold';  // 텍스트 굵기
     filterToggleButton.style.fontSize = '15px';  // 텍스트 크기
-    filterToggleButton.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';  // 그림자 효과
+    filterToggleButton.style.boxShadow = 'none';  // 그림자 효과
     filterToggleButton.style.cursor = 'pointer';  // 마우스 커서 변경
     filterToggleButton.style.transition = 'transform 0.3s ease, background 0.3s ease';  // 애니메이션 효과
 
