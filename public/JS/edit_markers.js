@@ -1,4 +1,5 @@
 // 수정할 기사를 위한 팝업 창 생성
+let currentPopup = null;
 function editVehicle(id) {
     const vehicle = vehicleMarkers[id].options.vehicleData;  // 수정할 차량 정보 가져오기
 
