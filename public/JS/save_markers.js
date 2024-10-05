@@ -234,7 +234,12 @@ function initSaveMarkers(map) {
         dispatchCountGroup.className = 'input-group';
         dispatchCountGroup.style.display = 'flex';  // Flexbox 사용
         dispatchCountGroup.style.alignItems = 'center';  // 수직 가운데 정렬
-        dispatchCountGroup.innerHTML = '<label style="min-width: 100px;">배차 횟수 :</label><input type="number" id="dispatchCount" style="width: 150px;" />';
+        dispatchCountGroup.innerHTML = `
+        <label style="min-width: 100px;">배차 횟수 :</label>
+        <input type="number" id="dispatchCount" style="width: 60px;" />
+        <label style="margin-left: 8px;">방문여부:</label>
+        <input type="checkbox" id="visitCheckbox" style="margin-left: -35px;" />
+    `;
         formContainer.appendChild(dispatchCountGroup);
 
         // 추가 메모 입력 그룹
@@ -314,6 +319,8 @@ function initSaveMarkers(map) {
         const friendliness = parseInt(document.getElementById('friendliness').value);
         const dispatchCount = parseInt(document.getElementById('dispatchCount').value);
         const additionalNotes = document.getElementById('additionalNotes').value;
+        const visit = document.getElementById('visitCheckbox').checked;  // 체크박스 값 가져오기
+
 
         // 데이터 유효성 검사
         if (!name || !phoneNumber || !serviceType) {
@@ -346,7 +353,8 @@ function initSaveMarkers(map) {
             dispatchCount,
             additionalNotes,
             latitude,
-            longitude
+            longitude,
+            visit  // visit 필드 추가
         };
 
         const response = await fetch('/api/vehicles', {

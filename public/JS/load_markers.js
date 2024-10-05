@@ -26,19 +26,20 @@ async function loadVehicleData() {
        `;  // 중앙 정렬 및 아래 간격 줄이기
             // 모든 정보를 표시하는 팝업 내용 생성 (ID, 위도, 경도 제외)
             let popupContent = `
-                <div class="popup-content">
-                    ${serviceTypeTitle}
-                    <div><b>이름:</b> ${vehicle.name}</div>
-                    <div><b>전화 번호:</b> ${vehicle.phoneNumber}</div>
-                    <div><b>지역 이름:</b> ${vehicle.location || '없음'}</div>
-                    <div><b>충성도:</b> ${vehicle.loyalty || '없음'}/10</div>
-                    <div><b>친절도:</b> ${vehicle.friendliness || '없음'}/10</div>
-                    <div><b>배차 횟수:</b> ${vehicle.dispatchCount || '없음'} 회</div>
-                    <div class="long-text"><b>추가 메모:</b> ${vehicle.additionalNotes || '없음'}</div>
-                    <button class="edit-button" onclick="editVehicle(${vehicle.id})">수정</button>
-                    <button class="delete-button" onclick="confirmDelete(${vehicle.id})">삭제</button>
-                </div>
-            `;
+    <div class="popup-content">
+        ${serviceTypeTitle}
+        <div><b>이름:</b> ${vehicle.name}</div>
+        <div><b>전화 번호:</b> ${vehicle.phoneNumber}</div>
+        <div><b>지역 이름:</b> ${vehicle.location || '없음'}</div>
+        <div><b>충성도:</b> ${vehicle.loyalty || '없음'}/10</div>
+        <div><b>친절도:</b> ${vehicle.friendliness || '없음'}/10</div>
+        <div><b>배차 횟수:</b> ${vehicle.dispatchCount || '없음'} 회</div>
+        <div><b>방문 가능:</b> ${vehicle.visit ? '예' : '아니오'}</div> <!-- 방문 여부 추가 -->
+        <div class="long-text"><b>추가 메모:</b> ${vehicle.additionalNotes || '없음'}</div>
+        <button class="edit-button" onclick="editVehicle(${vehicle.id})">수정</button>
+        <button class="delete-button" onclick="confirmDelete(${vehicle.id})">삭제</button>
+    </div>
+`;
 
             // 1톤팀일 경우에만 차량 정보 표시
             if (vehicle.serviceType === 1) {
@@ -54,6 +55,7 @@ async function loadVehicleData() {
                         <div><b>충성도:</b> ${vehicle.loyalty || '없음'}/10</div>
                         <div><b>친절도:</b> ${vehicle.friendliness || '없음'}/10</div>
                         <div><b>배차 횟수:</b> ${vehicle.dispatchCount || '없음'} 회</div>
+                        <div><b>방문 가능:</b> ${vehicle.visit ? '예' : '아니오'}</div> <!-- 방문 여부 추가 -->
                         <div class="long-text"><b>추가 메모:</b> ${vehicle.additionalNotes || '없음'}</div>
                         <button class="edit-button" onclick="editVehicle(${vehicle.id})">수정</button>
                         <button class="delete-button" onclick="confirmDelete(${vehicle.id})">삭제</button>

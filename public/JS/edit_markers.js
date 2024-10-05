@@ -211,12 +211,17 @@ phoneNumberInput.addEventListener('input', function (e) {
     formContainer.appendChild(friendlinessGroup);
 
     // 배차 횟수 입력 그룹
-    const dispatchCountGroup = document.createElement('div');
-    dispatchCountGroup.className = 'input-group';
-    dispatchCountGroup.style.display = 'flex';  // Flexbox 사용
-    dispatchCountGroup.style.alignItems = 'center';  // 수직 가운데 정렬
-    dispatchCountGroup.innerHTML = `<label style="min-width: 100px;">배차 횟수 :</label><input type="number" id="edit-dispatch-count" style="width: 150px;" value="${vehicle.dispatchCount || ''}" />`;
-    formContainer.appendChild(dispatchCountGroup);
+const dispatchCountGroup = document.createElement('div');
+dispatchCountGroup.className = 'input-group';
+dispatchCountGroup.style.display = 'flex';  // Flexbox 사용
+dispatchCountGroup.style.alignItems = 'center';  // 수직 가운데 정렬
+dispatchCountGroup.innerHTML = `
+    <label style="min-width: 100px;">배차 횟수 :</label>
+    <input type="number" id="edit-dispatch-count" style="width: 60px;" value="${vehicle.dispatchCount || ''}" />
+    <label style="margin-left: 8px;">방문여부:</label>
+    <input type="checkbox" id="edit-visit-checkbox" style="margin-left: -35px;" ${vehicle.visit ? 'checked' : ''} />
+`;
+formContainer.appendChild(dispatchCountGroup);
 
     // 추가 메모 입력 그룹
     const additionalNotesGroup = document.createElement('div');
@@ -293,6 +298,7 @@ async function saveVehicle(id) {
     const friendliness = parseInt(document.getElementById('edit-friendliness').value);
     const dispatchCount = parseInt(document.getElementById('edit-dispatch-count').value);
     const additionalNotes = document.getElementById('edit-additional-notes').value;
+    const visit = document.getElementById('edit-visit-checkbox').checked;
 
     // 데이터 유효성 검사
     if (!name || !phoneNumber || !serviceType) {
@@ -323,7 +329,8 @@ async function saveVehicle(id) {
         loyalty,
         friendliness,
         dispatchCount,
-        additionalNotes
+        additionalNotes,
+        vsit
     };
 
     try {
@@ -361,9 +368,14 @@ async function saveVehicle(id) {
 
 // 삭제 확인 함수 및 삭제 함수는 동일
 function confirmDelete(id) {
-    const confirmed = confirm('정말로 이 기사를 삭제하시겠습니까?');
-    if (confirmed) {
-        deleteVehicle(id);
+    const password = prompt("비밀번호를 입력하세요:");
+    if (password === "24대학%") {
+        const confirmed = confirm('정말로 이 기사를 삭제하시겠습니까?');
+        if (confirmed) {
+            deleteVehicle(id);
+        }
+    } else {
+        alert("비밀번호가 올바르지 않습니다.");
     }
 }
 // Helper 함수들: 숫자 값을 사람이 읽을 수 있는 텍스트로 변환
