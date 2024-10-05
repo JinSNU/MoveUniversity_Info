@@ -1,3 +1,4 @@
+document.addEventListener('DOMContentLoaded', function () {
 // 필터 UI 추가
 function createFilterUI() {
     const inputStyle = 'height: 21px; padding: 2px 5px; border: 1px solid #a3a3a3; border-radius: 4px;';
@@ -231,18 +232,73 @@ function createFilterUI() {
 
     additionalNotesContainer.appendChild(additionalNotesFilter);
     filterContainer.appendChild(additionalNotesContainer);
+
     function applyFilters() {
-        // 필터 조건에 맞는 마커만 표시하는 로직 추가
-        // 예시: 이름 필터 적용
-        const nameFilterValue = document.getElementById('filter-name').value.toLowerCase();
+        const nameFilterValue = document.getElementById('filter-name').value.toLowerCase() || '';
+        const phoneNumberFilterValue = document.getElementById('filter-phone-number').value || '';
+        const additionalNotesFilterValue = document.getElementById('filter-additional-notes').value.toLowerCase() || '';
+        const friendlinessFilterValues = document.getElementById('friendliness-slider').noUiSlider.get().map(Number);
+        const serviceTypeFilterValue = document.getElementById('filter-service-type').value;
+        const vehicleNumberFilterValue = document.getElementById('filter-vehicle-number').value.toLowerCase() || '';
+        const locationFilterValue = document.getElementById('filter-location').value.toLowerCase() || '';
+        const vehicleTonnageFilterValue = document.getElementById('filter-vehicle-tonnage').value || '';
+        const vehicleTypeFilterValue = document.getElementById('filter-vehicle-type').value;
+        const movingTypeFilterValue = document.getElementById('filter-moving-type').value;
+    
+        console.log('Name Filter:', nameFilterValue);
+        console.log('Phone Number Filter:', phoneNumberFilterValue);
+        console.log('Additional Notes Filter:', additionalNotesFilterValue);
+        console.log('Friendliness Filter:', friendlinessFilterValues);
+        console.log('Service Type Filter:', serviceTypeFilterValue);
+        console.log('Vehicle Number Filter:', vehicleNumberFilterValue);
+        console.log('Location Filter:', locationFilterValue);
+        console.log('Vehicle Tonnage Filter:', vehicleTonnageFilterValue);
+        console.log('Vehicle Type Filter:', vehicleTypeFilterValue);
+        console.log('Moving Type Filter:', movingTypeFilterValue);
+    
         markers.clearLayers();
     
+        let hasVisibleMarkers = false;
+    
         Object.values(vehicleMarkers).forEach(marker => {
-            const markerName = marker.options.title.toLowerCase();
-            if (markerName.includes(nameFilterValue)) {
-                markers.addLayer(marker);
+            const vehicleData = marker.options.vehicleData;
+            if (vehicleData && vehicleData.name) {
+                const { name, phoneNumber, additionalNotes, friendliness, serviceType, vehicleNumber, location, vehicleTonnage, vehicleType, movingType } = vehicleData;
+                const markerName = name.toLowerCase();
+                const markerNotes = additionalNotes.toLowerCase();
+                const markerLocation = location.toLowerCase();
+                const markerVehicleNumber = vehicleNumber ? vehicleNumber.toLowerCase() : '';
+    
+                console.log('Checking Marker:', markerName, phoneNumber, markerNotes, friendliness, serviceType, markerVehicleNumber, markerLocation, vehicleTonnage, vehicleType, movingType);
+    
+                if (
+                    markerName.includes(nameFilterValue) &&
+                    phoneNumber.includes(phoneNumberFilterValue) &&
+                    markerNotes.includes(additionalNotesFilterValue) &&
+                    friendliness >= friendlinessFilterValues[0] &&
+                    friendliness <= friendlinessFilterValues[1] &&
+                    (serviceTypeFilterValue === '' || serviceType.toString() === serviceTypeFilterValue) &&
+                    markerVehicleNumber.includes(vehicleNumberFilterValue) &&
+                    markerLocation.includes(locationFilterValue) &&
+                    (vehicleTonnageFilterValue === '' || vehicleTonnage.toString() === vehicleTonnageFilterValue) &&
+                    (vehicleTypeFilterValue === '' || vehicleType.toString() === vehicleTypeFilterValue) &&
+                    (movingTypeFilterValue === '' || movingType.toString() === movingTypeFilterValue)
+                ) {
+                    markers.addLayer(marker);
+                    hasVisibleMarkers = true;
+                    console.log('Marker added:', markerName);
+                } else {
+                    console.log('Marker not added:', markerName);
+                }
             }
         });
+    
+        if (!hasVisibleMarkers) {
+            console.log('No markers matched, adding all markers back.');
+            Object.values(vehicleMarkers).forEach(marker => {
+                markers.addLayer(marker);
+            });
+        }
     
         map.addLayer(markers);
     }
@@ -276,6 +332,12 @@ function createFilterUI() {
     filterWrapper.appendChild(filterContainer);
     document.getElementById('map-container').appendChild(filterWrapper); // map-container에 추가
 }
+// 초기 필터 UI 생성 호출
+createFilterUI();
+
+});
+
+
 
 
 // 범위 슬라이더 생성 함수 (양쪽 핸들을 사용하여 조절 가능)
@@ -349,5 +411,4 @@ function resetFilters() {
 }
 
 
-// 초기 필터 UI 생성 호출
-createFilterUI();
+
