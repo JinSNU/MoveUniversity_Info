@@ -330,7 +330,7 @@ async function saveVehicle(id) {
         friendliness,
         dispatchCount,
         additionalNotes,
-        vsit
+        visit
     };
 
     try {
