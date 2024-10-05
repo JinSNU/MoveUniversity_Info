@@ -1,5 +1,4 @@
-// 수정할 기사를 위한 팝업 창 생성
-let currentPopup = null;
+
 function editVehicle(id) {
     const vehicle = vehicleMarkers[id].options.vehicleData;  // 수정할 차량 정보 가져오기
 
@@ -277,7 +276,8 @@ formContainer.appendChild(dispatchCountGroup);
 }
 
 
-
+// 수정할 기사를 위한 팝업 창 생성
+let currentPopup = null;
 // 차량 수정 후 저장 함수
 async function saveVehicle(id) {
     // 비밀번호 입력 프롬프트
